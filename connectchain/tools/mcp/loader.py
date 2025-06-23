@@ -1,6 +1,6 @@
 """MCP tool loader with enterprise configuration support."""
 
-from typing import Any, Dict, List, Optional
+from typing import Any, Dict, List, Optional, cast
 
 from langchain.tools import BaseTool
 from langchain_mcp_adapters.client import MultiServerMCPClient
@@ -13,7 +13,7 @@ class MCPToolLoader:
 
     def __init__(self, config: Config):
         self.config = config
-        self.client = None
+        self.client: Optional[MultiServerMCPClient] = None
 
     async def load_tools(self, server_names: Optional[List[str]] = None) -> List[BaseTool]:
         """Load tools from specified MCP servers or all configured servers."""
@@ -35,11 +35,9 @@ class MCPToolLoader:
 
         # Initialize client and get tools
         self.client = MultiServerMCPClient(server_configs)
-        if self.client:
-            tools = await self.client.get_tools()
-            # Loaded tools from MCP servers
-            return tools
-        return []
+        tools = await self.client.get_tools()
+        # Loaded tools from MCP servers
+        return cast(List[BaseTool], tools)
 
     def _apply_enterprise_settings(
         self, name: str, server_config: Dict[str, Any]  # pylint: disable=unused-argument
@@ -71,4 +69,3 @@ class MCPToolLoader:
         if self.client:
             # MultiServerMCPClient handles cleanup internally
             self.client = None
-        return

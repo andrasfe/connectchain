@@ -1,9 +1,9 @@
 """LCEL-compatible MCP tool agent."""
 
-from typing import Any, Dict, List, Optional
+from typing import Any, Dict, List, Optional, Union
 
 from langchain.schema import AIMessage
-from langchain.schema.runnable import Runnable
+from langchain.schema.runnable import Runnable, RunnableConfig
 from langchain.tools import BaseTool
 
 from ...lcel import model
@@ -17,14 +17,16 @@ class MCPToolAgent(Runnable):
         self.tools = {tool.name: tool for tool in tools}
 
     async def ainvoke(
-        self, input_data: Dict[str, Any], config: Optional[Dict] = None, **kwargs: Any
+        self, input: Any, config: Optional[RunnableConfig] = None, **kwargs: Any
     ) -> Any:
         """Process input through LLM and execute any requested tools."""
         # Get LLM with bound tools
-        llm = model(self.model_id).bind_tools(list(self.tools.values()))
+        llm = model(self.model_id)
+        if hasattr(llm, "bind_tools"):
+            llm = llm.bind_tools(list(self.tools.values()))
 
         # Get LLM response
-        response = await llm.ainvoke(input_data, config)
+        response = await llm.ainvoke(input, config)
 
         # If no tool calls, return the content
         if not hasattr(response, "tool_calls") or not response.tool_calls:
@@ -53,8 +55,6 @@ class MCPToolAgent(Runnable):
             "tool_results": results,
         }
 
-    def invoke(
-        self, input_data: Dict[str, Any], config: Optional[Dict] = None, **kwargs: Any
-    ) -> Any:
+    def invoke(self, input: Any, config: Optional[RunnableConfig] = None, **kwargs: Any) -> Any:
         """Synchronous version - not implemented, use ainvoke."""
         raise NotImplementedError("Use ainvoke for async execution")

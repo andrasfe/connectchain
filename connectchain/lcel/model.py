@@ -15,6 +15,7 @@ from typing import Any
 
 from langchain.schema.language_model import BaseLanguageModel
 from langchain_openai import AzureOpenAI, ChatOpenAI
+from pydantic import SecretStr
 
 from connectchain.utils import Config, SessionMap, get_token_from_env
 from connectchain.utils.llm_proxy_wrapper import wrap_llm_with_proxy
@@ -89,8 +90,8 @@ def _get_chat_model_(auth_token: str, model_config: Any) -> ChatOpenAI:
     llm = ChatOpenAI(
         # Note: ChatOpenAI uses model parameter
         model=model_config.model_name,
-        openai_api_key=auth_token,
-        openai_api_base=model_config.api_base,
+        api_key=SecretStr(auth_token) if auth_token else None,
+        base_url=model_config.api_base,
         model_kwargs={
             "engine": model_config.engine,
             "api_version": model_config.api_version,
@@ -105,9 +106,9 @@ def _get_azure_model_(auth_token: str, model_config: Any) -> AzureOpenAI:
     llm = AzureOpenAI(
         # Note: AzureOpenAI uses model parameter
         model=model_config.model_name,
-        openai_api_key=auth_token,
-        openai_api_base=model_config.api_base,
-        openai_api_version=model_config.api_version,
+        api_key=SecretStr(auth_token) if auth_token else None,
+        azure_endpoint=model_config.api_base,
+        api_version=model_config.api_version,
         model_kwargs={
             "engine": model_config.engine,
             "api_version": model_config.api_version,
