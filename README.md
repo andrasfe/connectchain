@@ -213,6 +213,9 @@ tools = await loader.load_tools()
 # Create an agent that can use the tools
 agent = MCPToolAgent("1", tools)  # "1" is the model config index
 result = await agent.ainvoke({"query": "List files in /tmp"})
+
+# Use in LCEL chains
+chain = prompt | agent | RunnableLambda(lambda x: x["content"])
 ```
 
 ## Development
