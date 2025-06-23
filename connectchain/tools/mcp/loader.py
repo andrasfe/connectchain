@@ -6,7 +6,6 @@ from langchain.tools import BaseTool
 from langchain_mcp_adapters.client import MultiServerMCPClient
 
 from ...utils.config import Config
-from ...utils.logger import Logger
 
 
 class MCPToolLoader:
@@ -14,7 +13,6 @@ class MCPToolLoader:
 
     def __init__(self, config: Config):
         self.config = config
-        self.logger = Logger()
         self.client = None
 
     async def load_tools(self, server_names: Optional[List[str]] = None) -> List[BaseTool]:
@@ -23,7 +21,7 @@ class MCPToolLoader:
         servers = mcp_config.get("servers", {})
 
         if not servers:
-            self.logger.warning("No MCP servers configured")
+            # No MCP servers configured
             return []
 
         # Filter servers if specific names requested
@@ -37,13 +35,14 @@ class MCPToolLoader:
 
         # Initialize client and get tools
         self.client = MultiServerMCPClient(server_configs)
-        tools = await self.client.get_tools()
-
-        self.logger.info(f"Loaded {len(tools)} tools from {len(server_configs)} MCP servers")
-        return tools
+        if self.client:
+            tools = await self.client.get_tools()
+            # Loaded tools from MCP servers
+            return tools
+        return []
 
     def _apply_enterprise_settings(
-        self, name: str, server_config: Dict[str, Any]
+        self, name: str, server_config: Dict[str, Any]  # pylint: disable=unused-argument
     ) -> Dict[str, Any]:
         """Apply proxy, auth, and cert settings from main config."""
         config = server_config.copy()
@@ -67,8 +66,9 @@ class MCPToolLoader:
 
         return config
 
-    async def close(self):
+    async def close(self) -> None:
         """Clean up MCP client connections."""
         if self.client:
             # MultiServerMCPClient handles cleanup internally
             self.client = None
+        return

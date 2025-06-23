@@ -18,13 +18,13 @@ install:
 
 # Testing targets
 test:
-	python -m pytest
+	uv run pytest
 
 test-cov:
-	python -m pytest --cov=connectchain --cov-report=term-missing
+	uv run pytest --cov=connectchain --cov-report=term-missing
 
 test-verbose:
-	python -m pytest -v
+	uv run pytest -v
 
 # Linting targets
 lint: lint-black lint-isort lint-pylint lint-mypy
@@ -33,31 +33,31 @@ lint: lint-black lint-isort lint-pylint lint-mypy
 
 lint-black:
 	@echo "Running Black formatting check..."
-	@python -m black --check --diff connectchain/ || (echo "Black formatting check failed. Run 'make format' to fix." && exit 1)
+	@uv run black --check --diff connectchain/ || (echo "Black formatting check failed. Run 'make format' to fix." && exit 1)
 	@echo "Black formatting check passed"
 
 lint-isort:
 	@echo "Running isort import sorting check..."
-	@python -m isort --check-only --diff connectchain/ || (echo "Import sorting check failed. Run 'make format' to fix." && exit 1)
+	@uv run isort --check-only --diff connectchain/ || (echo "Import sorting check failed. Run 'make format' to fix." && exit 1)
 	@echo "Import sorting check passed"
 
 lint-pylint:
 	@echo "Running Pylint code analysis..."
-	@python -m pylint --fail-under=9.0 connectchain/ || (echo "Pylint analysis failed" && exit 1)
+	@uv run pylint --fail-under=9.0 connectchain/ || (echo "Pylint analysis failed" && exit 1)
 	@echo "Pylint analysis passed"
 
 lint-mypy:
 	@echo "Running MyPy type checking..."
-	@python -m mypy connectchain/ || (echo "MyPy type checking failed" && exit 1)
+	@uv run mypy connectchain/ || (echo "MyPy type checking failed" && exit 1)
 	@echo "MyPy type checking passed"
 
 # Auto-formatting
 format:
 	@echo "Auto-formatting code..."
 	@echo "  Running Black formatter..."
-	@python -m black connectchain/
+	@uv run black connectchain/
 	@echo "  Running isort import sorter..."
-	@python -m isort connectchain/
+	@uv run isort connectchain/
 	@echo "Code formatting completed!"
 
 # Combined checks
