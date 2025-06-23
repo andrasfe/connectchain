@@ -187,6 +187,34 @@ except OperationNotPermittedException as e:
 
 ```
 
+### `connectchain.tools.mcp`: MCP (Model Context Protocol) Integration
+
+ConnectChain supports [MCP](https://modelcontextprotocol.io/) servers, allowing you to use tools from any MCP-compatible server. Configure your MCP servers in `config.yml`:
+
+```yaml
+mcp:
+  servers:
+    filesystem:
+      command: npx
+      args: ["-y", "@modelcontextprotocol/server-filesystem", "/tmp"]
+```
+
+Then load and use MCP tools:
+
+```python
+from connectchain.tools.mcp import MCPToolLoader, MCPToolAgent
+from connectchain.utils import Config
+
+# Load tools from MCP servers
+config = Config.from_env()
+loader = MCPToolLoader(config)
+tools = await loader.load_tools()
+
+# Create an agent that can use the tools
+agent = MCPToolAgent("1", tools)  # "1" is the model config index
+result = await agent.ainvoke({"query": "List files in /tmp"})
+```
+
 ## Development
 
 This project uses [uv](https://docs.astral.sh/uv/) for fast dependency management and packaging.
