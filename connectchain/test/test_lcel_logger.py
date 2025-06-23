@@ -28,7 +28,9 @@ class SelfLogger(LCELLogger):
 
 TEMPLATE = "Give me 10 different {animal_type} species."
 
-prompt = ValidPromptTemplate(input_variables=["animal_type"], template=TEMPLATE)
+prompt = ValidPromptTemplate(
+    input_variables=["animal_type"], template=TEMPLATE, output_sanitizer=None
+)
 
 
 class TestLogger(TestCase):

@@ -10,12 +10,13 @@
 # or implied. See the License for the specific language governing permissions and limitations under
 # the License.
 """Unit Test for ValidLLMChain"""
+import os
 from unittest import TestCase
 from unittest.mock import patch
 
 from langchain.chains import LLMChain
-from langchain.llms.openai import OpenAIChat
 from langchain.prompts import PromptTemplate
+from langchain_openai import ChatOpenAI
 
 from connectchain.chains import ValidLLMChain
 from connectchain.utils.exceptions import OperationNotPermittedException
@@ -32,15 +33,15 @@ def my_sanitizer(query: str) -> str:
 class TestValidLLMChain(TestCase):
     """Test Class for ValidLLMChain"""
 
+    @patch.dict("os.environ", {"OPENAI_API_KEY": "test-key"})
     def test_run(self):
         """Test run method of ValidLLMChain"""
         prompt_template = "Tell me about the rare bird, {rare_bird_type}."
         prompt = PromptTemplate(input_variables=["rare_bird_type"], template=prompt_template)
 
-        # create mock OpenAIChat instance
-        llm = OpenAIChat(
-            engine="gpt-35",
-            model_name="gpt-35-turbo",
+        # create mock ChatOpenAI instance
+        llm = ChatOpenAI(
+            model="gpt-3.5-turbo",
             openai_api_key="12345",
             openai_api_base="stub",
         )

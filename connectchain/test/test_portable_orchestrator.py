@@ -14,7 +14,7 @@ import os
 import unittest
 from unittest.mock import Mock, patch
 
-from langchain.chat_models import ChatOpenAI
+from langchain_openai import ChatOpenAI
 
 from connectchain.chains import ValidLLMChain
 from connectchain.orchestrators import PortableOrchestrator

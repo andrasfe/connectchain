@@ -18,47 +18,47 @@ install:
 
 # Testing targets
 test:
-	uv run pytest
+	python -m pytest
 
 test-cov:
-	uv run pytest --cov=connectchain --cov-report=term-missing
+	python -m pytest --cov=connectchain --cov-report=term-missing
 
 test-verbose:
-	uv run pytest -v
+	python -m pytest -v
 
 # Linting targets
 lint: lint-black lint-isort lint-pylint lint-mypy
 	@echo ""
-	@echo "✅ All linting checks completed!"
+	@echo "All linting checks completed!"
 
 lint-black:
-	@echo "🔍 Running Black formatting check..."
-	@uv run black --check --diff connectchain/ || (echo "❌ Black formatting check failed. Run 'make format' to fix." && exit 1)
-	@echo "✅ Black formatting check passed"
+	@echo "Running Black formatting check..."
+	@python -m black --check --diff connectchain/ || (echo "Black formatting check failed. Run 'make format' to fix." && exit 1)
+	@echo "Black formatting check passed"
 
 lint-isort:
-	@echo "🔍 Running isort import sorting check..."
-	@uv run isort --check-only --diff connectchain/ || (echo "❌ Import sorting check failed. Run 'make format' to fix." && exit 1)
-	@echo "✅ Import sorting check passed"
+	@echo "Running isort import sorting check..."
+	@python -m isort --check-only --diff connectchain/ || (echo "Import sorting check failed. Run 'make format' to fix." && exit 1)
+	@echo "Import sorting check passed"
 
 lint-pylint:
-	@echo "🔍 Running Pylint code analysis..."
-	@uv run pylint --fail-under=9.0 connectchain/ || (echo "❌ Pylint analysis failed" && exit 1)
-	@echo "✅ Pylint analysis passed"
+	@echo "Running Pylint code analysis..."
+	@python -m pylint --fail-under=9.0 connectchain/ || (echo "Pylint analysis failed" && exit 1)
+	@echo "Pylint analysis passed"
 
 lint-mypy:
-	@echo "🔍 Running MyPy type checking..."
-	@uv run mypy connectchain/ || (echo "❌ MyPy type checking failed" && exit 1)
-	@echo "✅ MyPy type checking passed"
+	@echo "Running MyPy type checking..."
+	@python -m mypy connectchain/ || (echo "MyPy type checking failed" && exit 1)
+	@echo "MyPy type checking passed"
 
 # Auto-formatting
 format:
-	@echo "🛠️ Auto-formatting code..."
-	@echo "  📝 Running Black formatter..."
-	@uv run black connectchain/
-	@echo "  📋 Running isort import sorter..."
-	@uv run isort connectchain/
-	@echo "✅ Code formatting completed!"
+	@echo "Auto-formatting code..."
+	@echo "  Running Black formatter..."
+	@python -m black connectchain/
+	@echo "  Running isort import sorter..."
+	@python -m isort connectchain/
+	@echo "Code formatting completed!"
 
 # Combined checks
 check: lint test
@@ -66,7 +66,7 @@ check: lint test
 # Less strict linting (skip mypy for now)
 lint-quick: lint-black lint-isort lint-pylint
 	@echo ""
-	@echo "✅ Quick linting checks completed! (MyPy skipped)"
+	@echo "Quick linting checks completed! (MyPy skipped)"
 
 # Cleanup
 clean:

@@ -19,3 +19,5 @@ dist/
 .pylint
 
 connectchain/config/config.yml
+
+.mcp.json
