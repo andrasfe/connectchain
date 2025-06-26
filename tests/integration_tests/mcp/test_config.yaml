@@ -1,0 +1,12 @@
+llm:
+  provider: openai
+  model: gpt-4o
+  api_key: dummy-key
+
+mcp:
+  servers:
+    mock_server:
+      command: python  # This will be replaced dynamically in the test
+      args:
+        - mock_mcp_server.py  # This will be replaced dynamically in the test
+      transport: stdio

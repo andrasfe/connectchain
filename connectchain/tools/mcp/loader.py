@@ -46,21 +46,36 @@ class MCPToolLoader:
         config = server_config.copy()
 
         # Apply proxy if configured
-        if self.config.proxy and "env" not in config:
-            config["env"] = config.get("env", {})
-            config["env"]["HTTP_PROXY"] = self.config.proxy
-            config["env"]["HTTPS_PROXY"] = self.config.proxy
+        try:
+            proxy = self.config.proxy
+            if proxy and "env" not in config:
+                config["env"] = config.get("env", {})
+                config["env"]["HTTP_PROXY"] = proxy
+                config["env"]["HTTPS_PROXY"] = proxy
+        except KeyError:
+            # Proxy not configured
+            pass
 
         # Apply auth token if EAS is configured
-        if self.config.eas and server_config.get("auth", {}).get("type") == "bearer":
-            # Token would be fetched from SessionMap in real usage
-            config["env"] = config.get("env", {})
-            config["env"]["MCP_AUTH_TOKEN"] = "${EAS_TOKEN}"
+        try:
+            eas = self.config.eas
+            if eas and server_config.get("auth", {}).get("type") == "bearer":
+                # Token would be fetched from SessionMap in real usage
+                config["env"] = config.get("env", {})
+                config["env"]["MCP_AUTH_TOKEN"] = "${EAS_TOKEN}"
+        except KeyError:
+            # EAS not configured
+            pass
 
         # Apply cert if configured
-        if self.config.cert and server_config.get("transport") == "streamable-http":
-            config["env"] = config.get("env", {})
-            config["env"]["SSL_CERT_FILE"] = self.config.cert
+        try:
+            cert = self.config.cert
+            if cert and server_config.get("transport") == "streamable-http":
+                config["env"] = config.get("env", {})
+                config["env"]["SSL_CERT_FILE"] = cert
+        except KeyError:
+            # Cert not configured
+            pass
 
         return config
 

@@ -19,7 +19,7 @@ from langchain_openai import ChatOpenAI
 from connectchain.chains import ValidLLMChain
 from connectchain.orchestrators import PortableOrchestrator
 from connectchain.prompts import ValidPromptTemplate
-from connectchain.test.setup_utils import get_mock_config
+from .setup_utils import get_mock_config
 
 
 class TestPortableOrchestrator(unittest.TestCase):

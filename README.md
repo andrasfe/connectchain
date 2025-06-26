@@ -254,23 +254,35 @@ source .venv/bin/activate  # Linux/macOS
 
 ### Running Tests
 
-The project uses [pytest](https://pytest.org/) for testing. All tests are located in `connectchain/test/`.
+The project uses [pytest](https://pytest.org/) for testing. Tests are organized into:
+- **Unit tests**: Located in `tests/unit_tests/`
+- **Integration tests**: Located in `tests/integration_tests/`
 
 ```bash
-# Run all tests
-uv run pytest
+# Run all tests (unit + integration)
+make test
+
+# Run only unit tests
+make test-unit
+
+# Run only integration tests  
+make test-integration
+
+# Run tests with coverage
+make test-cov                    # All tests with coverage
+make test-unit-cov               # Unit tests with coverage
+make test-integration-cov        # Integration tests with coverage
+
+# Run tests directly with pytest
+uv run pytest                    # Run all tests
+uv run pytest tests/unit_tests/  # Run unit tests only
+uv run pytest tests/integration_tests/  # Run integration tests only
 
 # Run tests with verbose output
 uv run pytest -v
 
-# Run tests with coverage report
-uv run pytest --cov=connectchain
-
-# Run tests with coverage and show missing lines
-uv run pytest --cov=connectchain --cov-report=term-missing
-
 # Run specific test file
-uv run pytest connectchain/test/test_model.py
+uv run pytest tests/unit_tests/test_model.py
 
 # Run tests matching a pattern
 uv run pytest -k "test_model"
@@ -312,7 +324,9 @@ The project uses multiple linting tools to maintain code quality. All tools are 
 make check                                  # Run linting + tests
 make lint                                   # Run all linting checks (includes mypy)
 make lint-quick                             # Run linting checks (skip mypy type checking)
-make test                                   # Run all tests
+make test                                   # Run all tests (unit + integration)
+make test-unit                              # Run unit tests only
+make test-integration                       # Run integration tests only
 
 # Individual linting tools
 make lint-black                             # Code formatting check

@@ -53,7 +53,7 @@ dev-dependencies = [
 ]
 
 [tool.pytest.ini_options]
-testpaths = ["connectchain/test"]
+testpaths = ["tests"]
 python_files = ["test_*.py"]
 python_classes = ["Test*"]
 python_functions = ["test_*"]
@@ -67,7 +67,7 @@ pythonpath = ["."]
 [tool.coverage.run]
 source = ["connectchain"]
 omit = [
-    "connectchain/test/*",
+    "tests/*",
     "*/test_*",
 ]
 
@@ -123,7 +123,7 @@ warn_unreachable = true
 strict_equality = true
 # Exclude test files from strict type checking
 exclude = [
-    "connectchain/test/.*",
+    "tests/.*",
     "connectchain/examples/.*",
 ]
 

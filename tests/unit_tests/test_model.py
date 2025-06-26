@@ -17,7 +17,7 @@ from unittest.mock import Mock, patch
 from langchain_openai import AzureOpenAI, ChatOpenAI
 
 from connectchain.lcel import LCELModelException, model
-from connectchain.test.setup_utils import get_mock_config
+from .setup_utils import get_mock_config
 
 
 class TestModel(unittest.TestCase):
