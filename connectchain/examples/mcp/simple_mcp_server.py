@@ -22,6 +22,7 @@ except ImportError:
     print("Error: fastmcp is not installed.")
     print("Please install it with: pip install fastmcp")
     import sys
+
     sys.exit(1)
 
 import sys
@@ -30,21 +31,23 @@ import os
 # Initialize the MCP server
 mcp = FastMCP("ConnectChain Example MCP Server")
 
+
 @mcp.tool
 def greet(name: str) -> str:
     """Return a greeting for the given name."""
     return f"Hello, {name}! Welcome to ConnectChain with MCP."
 
+
 @mcp.tool
 def calculate(operation: str, a: float, b: float) -> float:
     """
     Perform a calculation on two numbers.
-    
+
     Args:
         operation: The operation to perform (add, subtract, multiply, divide)
         a: The first number
         b: The second number
-        
+
     Returns:
         The result of the calculation
     """
@@ -52,14 +55,15 @@ def calculate(operation: str, a: float, b: float) -> float:
         "add": lambda x, y: x + y,
         "subtract": lambda x, y: x - y,
         "multiply": lambda x, y: x * y,
-        "divide": lambda x, y: x / y if y != 0 else "Error: Division by zero"
+        "divide": lambda x, y: x / y if y != 0 else "Error: Division by zero",
     }
-    
+
     if operation not in operations:
         return f"Error: Unknown operation '{operation}'. Use: add, subtract, multiply, or divide"
-    
+
     result = operations[operation](a, b)
     return result
+
 
 @mcp.tool
 def get_info() -> dict:
@@ -68,15 +72,16 @@ def get_info() -> dict:
         "name": "ConnectChain Example MCP Server",
         "version": "1.0.0",
         "tools": ["greet", "calculate", "get_info"],
-        "description": "A simple MCP server demonstrating integration with ConnectChain"
+        "description": "A simple MCP server demonstrating integration with ConnectChain",
     }
+
 
 if __name__ == "__main__":
     # Server can run in different transport modes
     transport = "stdio"  # Default transport
     port = 8080
     path = None
-    
+
     # Check for command line arguments or environment variables
     if "--http" in sys.argv or os.environ.get("MCP_TRANSPORT") == "http":
         transport = "http"

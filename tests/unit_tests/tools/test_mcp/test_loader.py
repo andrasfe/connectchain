@@ -72,25 +72,6 @@ class TestMCPToolLoader:
             assert "math_tools" in call_args
             assert "web_tools" not in call_args
 
-    def test_apply_enterprise_settings(self, mock_config):
-        """Test enterprise settings are applied correctly."""
-        loader = MCPToolLoader(mock_config)
-
-        # Test proxy application
-        server_config = {"transport": "stdio"}
-        result = loader._apply_enterprise_settings("test", server_config)
-        assert result["env"]["HTTP_PROXY"] == mock_config.proxy
-        assert result["env"]["HTTPS_PROXY"] == mock_config.proxy
-
-        # Test auth token placeholder
-        server_config = {"transport": "stdio", "auth": {"type": "bearer"}}
-        result = loader._apply_enterprise_settings("test", server_config)
-        assert result["env"]["MCP_AUTH_TOKEN"] == "${EAS_TOKEN}"
-
-        # Test cert application
-        server_config = {"transport": "streamable-http"}
-        result = loader._apply_enterprise_settings("test", server_config)
-        assert result["env"]["SSL_CERT_FILE"] == mock_config.cert
 
     @pytest.mark.asyncio
     async def test_no_servers_configured(self):

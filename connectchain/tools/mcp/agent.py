@@ -1,6 +1,6 @@
 """LCEL-compatible MCP tool agent."""
 
-from typing import Any, Dict, List, Optional, Union
+from typing import Any, List, Optional
 
 from langchain.schema import AIMessage
 from langchain.schema.runnable import Runnable, RunnableConfig
@@ -17,7 +17,10 @@ class MCPToolAgent(Runnable):
         self.tools = {tool.name: tool for tool in tools}
 
     async def ainvoke(
-        self, input: Any, config: Optional[RunnableConfig] = None, **kwargs: Any
+        self,
+        input: Any,
+        config: Optional[RunnableConfig] = None,
+        **kwargs: Any,  # pylint: disable=redefined-builtin
     ) -> Any:
         """Process input through LLM and execute any requested tools."""
         # Get LLM with bound tools
@@ -55,6 +58,11 @@ class MCPToolAgent(Runnable):
             "tool_results": results,
         }
 
-    def invoke(self, input: Any, config: Optional[RunnableConfig] = None, **kwargs: Any) -> Any:
+    def invoke(
+        self,
+        input: Any,
+        config: Optional[RunnableConfig] = None,
+        **kwargs: Any,  # pylint: disable=redefined-builtin
+    ) -> Any:
         """Synchronous version - not implemented, use ainvoke."""
         raise NotImplementedError("Use ainvoke for async execution")
