@@ -2,6 +2,7 @@
 An enterprise-grade, Generative AI framework and utilities for AI-enabled applications. `connectchain` is designed to bridge the gap between enterprise needs and what is available in existing frameworks.
 
 Primary objectives include:
+* Support for both direct API access and Enterprise Auth Service (EAS) integration
 * A login utility for API-based LLM services that integrates with Enterprise Auth Service (EAS). Simplified generation of the JWT token, which is then passed to the modeling service provider.
 * Support for configuration-based outbound proxy support at the model level to allow integration with enterprise-level security requirements.
 * A set of tools to provide greater control over generated prompts. This is done by adding hooks to the existing langchain packages.
@@ -25,6 +26,19 @@ uv pip install connectchain
 ## Usage
 
 Connectchain works with a combination of environmental variables and a configuration `.yml` file. Environmental variables are defined in the `config.yml` and their corresponding values set in the `.env` file. The path to the `config.yml` is defined as an variable in the `.env` file. *You MUST create both a `config.yml` and `.env` file to use the module.* The [example config file](./connectchain/config/example.config.yml) can be found at [`./connectchain/config/example.config.yml`](./connectchain/config/example.config.yml). See the [example env file](example.env) for more details. You can copy and rename both files; replacing the required values with your ids and secrets and adding additional supported options as needed.
+
+### Direct API Access
+ConnectChain now supports direct API access without requiring EAS authentication. Simply omit the EAS configuration from your `config.yml` and the framework will automatically use direct API access with provider API keys from environment variables (e.g., `OPENAI_API_KEY`).
+
+```yaml
+# config.yml - Direct access example
+models:
+    '1':
+        provider: openai
+        type: chat
+        model_name: o4-mini-2025-04-16
+        # No EAS, api_base, or engine required for direct access   
+ ```
 
 ### `connectchain.lcel`: For the simplest Use Cases
 [LangChain Expression Language (LCEL)](https://python.langchain.com/docs/expression_language/) supports adding a model() method. Now one can execute a chain by following the LCEL syntax with a minor tweak: 
@@ -70,6 +84,13 @@ models:
         host: proxy.foo.com
         port: 8080
     # ... continue the model configuration
+    
+  # Direct access model (bypasses EAS even when EAS is configured)
+  bar:
+    provider: openai
+    type: chat
+    model_name: gpt-4
+    bypass_eas: true  # Forces direct API access
 ```
 
 Add logging or auditing to the chain:

@@ -1,0 +1,104 @@
+# Example configurations for various scenarios
+
+# 1. DIRECT API ACCESS (No EAS)
+# Simply omit the EAS configuration
+models:
+    # OpenAI Models
+    'gpt-4':
+        provider: openai
+        type: chat
+        model_name: gpt-4
+        
+    'gpt-3.5':
+        provider: openai
+        type: chat
+        model_name: gpt-3.5-turbo
+        
+    'o4-mini':
+        provider: openai
+        type: chat
+        model_name: o4-mini-2025-04-16
+        
+    # Anthropic Models
+    'claude-3-opus':
+        provider: anthropic
+        type: chat
+        model_name: claude-3-opus-20240229
+        
+    'claude-3-sonnet':
+        provider: anthropic
+        type: chat
+        model_name: claude-3-sonnet-20240229
+        
+    # Google Models
+    'gemini-pro':
+        provider: google
+        type: chat
+        model_name: gemini-pro
+        
+    # Custom API endpoint (e.g., local proxy, custom deployment)
+    'custom-gpt4':
+        provider: openai
+        type: chat
+        model_name: gpt-4
+        api_base: https://my-company-proxy.com/v1
+        
+    # Custom environment variable for API key
+    'team-gpt':
+        provider: openai
+        type: chat
+        model_name: gpt-4
+        api_key_env: TEAM_OPENAI_KEY
+
+# 2. AZURE OPENAI WITH EAS (Enterprise)
+eas:
+    url: https://auth.company.com
+    scope: ["/api/v1/chat/**::post"]
+    originator_source: my-app
+    id_key: CONSUMER_ID
+    secret_key: CONSUMER_SECRET
+    token_refresh_interval: 60
+    
+models:
+    'azure-gpt4':
+        provider: openai
+        type: azure
+        engine: gpt-4
+        model_name: gpt-4
+        api_version: 2023-07-01-preview
+        api_base: https://my-instance.openai.azure.com
+        
+    # Direct access model (bypasses EAS even when configured)
+    'direct-claude':
+        provider: anthropic
+        type: chat
+        model_name: claude-3-opus-20240229
+        bypass_eas: true
+
+# 3. MIXED CONFIGURATION
+# Some models use EAS, others use direct access
+eas:
+    id_key: CONSUMER_ID
+    secret_key: CONSUMER_SECRET
+    
+models:
+    # Uses EAS
+    'corporate-gpt4':
+        provider: openai
+        type: azure
+        engine: gpt-4
+        model_name: gpt-4
+        api_base: https://corporate.openai.azure.com
+        
+    # Direct access (non-OpenAI providers always bypass EAS)
+    'public-claude':
+        provider: anthropic
+        type: chat
+        model_name: claude-3-opus-20240229
+        
+    # OpenAI with bypass_eas flag
+    'public-gpt4':
+        provider: openai
+        type: chat
+        model_name: gpt-4
+        bypass_eas: true

@@ -21,3 +21,5 @@ dist/
 connectchain/config/config.yml
 
 .mcp.json
+config.yml
+.vscode/
