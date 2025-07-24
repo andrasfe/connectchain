@@ -187,6 +187,39 @@ except OperationNotPermittedException as e:
 
 ```
 
+### `connectchain.tools.mcp`: Model Context Protocol (MCP) integration
+Provides integration with MCP servers for dynamic tool loading and execution. MCP enables LLMs to interact with external systems through a standardized protocol.
+
+```python
+from connectchain.tools.mcp import MCPToolLoader, MCPToolAgent
+from connectchain.lcel import model
+
+# Load tools from configured MCP servers
+async def load_and_use_mcp_tools():
+    # Initialize loader from config
+    loader = MCPToolLoader.from_config()
+    
+    # Load tools from specific servers (or all if none specified)
+    tools = await loader.load_tools(['my_server'])
+    
+    # Create an agent that can use these tools
+    agent = MCPToolAgent(tools, model_id='1')
+    
+    # Use the agent in LCEL chains
+    response = await agent.ainvoke("What tools are available?")
+    
+    # Clean up when done
+    await loader.close()
+
+# Configure MCP servers in config.yml:
+# mcp:
+#   servers:
+#     my_server:
+#       command: python
+#       args: [my_mcp_server.py]
+#       transport: stdio
+```
+
 ## Development
 
 This project uses [uv](https://docs.astral.sh/uv/) for fast dependency management and packaging.
@@ -269,6 +302,7 @@ connectchain/
 ├── prompts/        # Enhanced prompt templates
 ├── test/           # Test suite
 ├── tools/          # Extended LangChain tools
+│   └── mcp/        # Model Context Protocol integration
 └── utils/          # Core utilities (auth, config, proxy)
 ```
 

@@ -30,6 +30,7 @@ dependencies = [
     "tiktoken==0.5.1",
     "python-dotenv~=1.0.0",
     "pyopenssl==23.3.0",
+    "langchain-mcp-adapters>=0.1.0",
 ]
 
 [project.urls]

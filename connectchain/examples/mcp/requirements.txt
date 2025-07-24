@@ -1,0 +1,7 @@
+# Requirements for MCP examples
+
+# For the MCP server
+fastmcp>=2.0.0
+
+# ConnectChain is assumed to be installed
+# If not, install with: pip install connectchain
