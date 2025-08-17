@@ -47,15 +47,6 @@ class Config:
         """Get config attribute by key."""
         return ConfigWrapper(self.data[key])
 
-    def get_mcp_servers(self) -> Dict[str, Dict[str, Any]]:
-        """Get MCP server configurations."""
-        mcp_config = self.data.get("mcp", {})
-        if isinstance(mcp_config, dict):
-            servers = mcp_config.get("servers", {})
-            if isinstance(servers, dict):
-                return servers
-        return {}
-
 
 class ConfigWrapper:
     """Wrapper for Config Class"""

@@ -46,19 +46,22 @@ class TestConfigMCP:
 
     def test_get_mcp_servers_with_servers(self, config_with_mcp):
         """Test getting MCP servers when they exist."""
-        servers = config_with_mcp.get_mcp_servers()
+        servers = config_with_mcp.mcp.servers
 
-        assert len(servers) == 2
-        assert "math_tools" in servers
-        assert "web_tools" in servers
-        assert servers["math_tools"]["command"] == "python"
-        assert servers["web_tools"]["transport"] == "streamable-http"
+        assert len(servers.data) == 2
+        assert "math_tools" in servers.data
+        assert "web_tools" in servers.data
+        assert servers.data["math_tools"]["command"] == "python"
+        assert servers.data["web_tools"]["transport"] == "streamable-http"
 
     def test_get_mcp_servers_without_servers(self, config_without_mcp):
         """Test getting MCP servers when none exist."""
-        servers = config_without_mcp.get_mcp_servers()
-
-        assert servers == {}
+        try:
+            servers = config_without_mcp.mcp.servers
+            assert False, "Should have raised KeyError"
+        except KeyError:
+            # Expected behavior when mcp section doesn't exist
+            pass
 
     def test_get_mcp_servers_partial_config(self):
         """Test getting MCP servers with partial config."""
@@ -72,5 +75,5 @@ class TestConfigMCP:
             yaml.dump(config_data, f)
             config = Config(f.name)
 
-        servers = config.get_mcp_servers()
-        assert servers == {}
+        servers = config.mcp.servers
+        assert servers is None

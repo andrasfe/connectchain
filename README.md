@@ -28,7 +28,7 @@ uv pip install connectchain
 Connectchain works with a combination of environmental variables and a configuration `.yml` file. Environmental variables are defined in the `config.yml` and their corresponding values set in the `.env` file. The path to the `config.yml` is defined as an variable in the `.env` file. *You MUST create both a `config.yml` and `.env` file to use the module.* The [example config file](./connectchain/config/example.config.yml) can be found at [`./connectchain/config/example.config.yml`](./connectchain/config/example.config.yml). See the [example env file](example.env) for more details. You can copy and rename both files; replacing the required values with your ids and secrets and adding additional supported options as needed.
 
 ### Direct API Access
-ConnectChain now supports direct API access without requiring EAS authentication. Simply omit the EAS configuration from your `config.yml` and the framework will automatically use direct API access with provider API keys from environment variables (e.g., `OPENAI_API_KEY`).
+ConnectChain supports direct API access without requiring EAS authentication. Simply omit the EAS configuration from your `config.yml` and the framework will automatically use direct API access with provider API keys from environment variables (e.g., `OPENAI_API_KEY`).
 
 ```yaml
 # config.yml - Direct access example
@@ -210,34 +210,7 @@ except OperationNotPermittedException as e:
 
 ### `connectchain.tools.mcp`: MCP (Model Context Protocol) Integration
 
-ConnectChain supports [MCP](https://modelcontextprotocol.io/) servers, allowing you to use tools from any MCP-compatible server. Configure your MCP servers in `config.yml`:
-
-```yaml
-mcp:
-  servers:
-    filesystem:
-      command: npx
-      args: ["-y", "@modelcontextprotocol/server-filesystem", "/tmp"]
-```
-
-Then load and use MCP tools:
-
-```python
-from connectchain.tools.mcp import MCPToolLoader, MCPToolAgent
-from connectchain.utils import Config
-
-# Load tools from MCP servers
-config = Config.from_env()
-loader = MCPToolLoader(config)
-tools = await loader.load_tools()
-
-# Create an agent that can use the tools
-agent = MCPToolAgent("1", tools)  # "1" is the model config index
-result = await agent.ainvoke({"query": "List files in /tmp"})
-
-# Use in LCEL chains
-chain = prompt | agent | RunnableLambda(lambda x: x["content"])
-```
+For examples and configuration details, see the [MCP tool README.md](./connectchain/examples/mcp/README.md).
 
 ## Development
 

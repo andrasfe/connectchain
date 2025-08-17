@@ -1,5 +1,6 @@
-"""MCP tool loader."""
+"""Load MCP tools from configured servers."""
 
+import logging
 from typing import List, Optional, cast
 
 from langchain.tools import BaseTool
@@ -21,6 +22,9 @@ class MCPToolLoader:
         servers = mcp_config.get("servers", {})
 
         if not servers:
+            logging.getLogger(__name__).warning(
+                "No servers found for tool loading. Check MCP configuration."
+            )
             return []
 
         # Filter servers if specific names requested

@@ -18,12 +18,14 @@ bypassing the need for Enterprise Auth Service (EAS) authentication.
 
 import asyncio
 import os
-from dotenv import load_dotenv, find_dotenv
+
+from dotenv import find_dotenv, load_dotenv
 from langchain.prompts import PromptTemplate
 from langchain.schema import StrOutputParser
-from connectchain.tools.mcp import MCPToolLoader, MCPToolAgent
-from connectchain.utils import Config
+
 from connectchain.lcel import model
+from connectchain.tools.mcp import MCPToolAgent, MCPToolLoader
+from connectchain.utils import Config
 
 # Load environment variables
 load_dotenv(find_dotenv())

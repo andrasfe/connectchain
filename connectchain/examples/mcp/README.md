@@ -4,7 +4,7 @@ This directory contains examples demonstrating how to use MCP tools with Connect
 
 ## Overview
 
-MCP (Model Context Protocol) allows you to create tools that can be used by language models. ConnectChain provides seamless integration with MCP servers, and with the new direct API access feature, you can use MCP tools without requiring Enterprise Auth Service (EAS) authentication.
+MCP (Model Context Protocol) allows you to create tools that can be used by language models. ConnectChain provides seamless integration with MCP servers, and with direct API access, you can use MCP tools without requiring Enterprise Auth Service (EAS) authentication.
 
 ## Files in this Directory
 
@@ -14,17 +14,12 @@ MCP (Model Context Protocol) allows you to create tools that can be used by lang
 
 ## Prerequisites
 
-### For the MCP Server
-The MCP server example requires the `fastmcp` package:
+Install ConnectChain with examples dependencies:
 ```bash
-pip install fastmcp
+pip install connectchain[examples]
 ```
 
-### For ConnectChain
-Ensure you have ConnectChain installed:
-```bash
-pip install connectchain
-```
+For examples and configuration details, see the MCP tool README.md
 
 ## Quick Start
 
@@ -59,8 +54,24 @@ mcp:
 ### 3. Run the example
 
 ```bash
-python examples/mcp/mcp_direct_access_example.py
+python examples/mcp/mcp_example.py
 ```
+
+#### Direct API Access
+
+The example demonstrates ConnectChain's direct API access:
+
+- No EAS authentication required
+- Uses API keys directly from environment variables
+- Supports multiple LLM providers
+- Seamless integration with MCP tools
+
+#### Key Features Demonstrated
+
+1. **Model Configuration**: Simple model setup without enterprise requirements
+2. **MCP Tool Loading**: Automatic discovery and loading of MCP tools
+3. **Agent Creation**: Creating an agent that can use MCP tools
+4. **Tool Execution**: Examples of single and multi-tool usage
 
 ## The MCP Server
 
@@ -84,22 +95,6 @@ python examples/mcp/simple_mcp_server.py --http
 # Run in SSE mode
 python examples/mcp/simple_mcp_server.py --sse
 ```
-
-## Direct API Access
-
-The example demonstrates ConnectChain's direct API access feature:
-
-- No EAS authentication required
-- Uses API keys directly from environment variables
-- Supports multiple LLM providers
-- Seamless integration with MCP tools
-
-### Key Features Demonstrated
-
-1. **Model Configuration**: Simple model setup without enterprise requirements
-2. **MCP Tool Loading**: Automatic discovery and loading of MCP tools
-3. **Agent Creation**: Creating an agent that can use MCP tools
-4. **Tool Execution**: Examples of single and multi-tool usage
 
 ## Configuration Options
 
@@ -128,9 +123,9 @@ mcp:
 ## Troubleshooting
 
 ### "No module named 'fastmcp'"
-Install the required dependency:
+Install ConnectChain with examples dependencies:
 ```bash
-pip install fastmcp
+pip install connectchain[examples]
 ```
 
 ### "OPENAI_API_KEY not found"

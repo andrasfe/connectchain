@@ -25,20 +25,20 @@ except ImportError:
 
     sys.exit(1)
 
-import sys
 import os
+import sys
 
 # Initialize the MCP server
 mcp = FastMCP("ConnectChain Example MCP Server")
 
 
-@mcp.tool
+@mcp.tool()
 def greet(name: str) -> str:
     """Return a greeting for the given name."""
     return f"Hello, {name}! Welcome to ConnectChain with MCP."
 
 
-@mcp.tool
+@mcp.tool()
 def calculate(operation: str, a: float, b: float) -> float:
     """
     Perform a calculation on two numbers.
@@ -65,7 +65,7 @@ def calculate(operation: str, a: float, b: float) -> float:
     return result
 
 
-@mcp.tool
+@mcp.tool()
 def get_info() -> dict:
     """Get information about this MCP server."""
     return {

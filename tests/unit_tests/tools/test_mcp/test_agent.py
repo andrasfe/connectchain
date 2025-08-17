@@ -43,7 +43,7 @@ class TestMCPToolAgent:
             agent = MCPToolAgent("1", mock_tools)
             result = await agent.ainvoke({"query": "What is 2+2?"})
 
-            assert result == "The answer is 42"
+            assert result.content == "The answer is 42"
             assert mock_llm.bind_tools.called
 
     @pytest.mark.asyncio
@@ -113,9 +113,13 @@ class TestMCPToolAgent:
             assert result["tool_results"][0]["tool"] == "add"
             assert result["tool_results"][0]["error"] == "Tool failed"
 
-    def test_invoke_not_implemented(self, mock_tools):
-        """Test synchronous invoke raises NotImplementedError."""
-        agent = MCPToolAgent("1", mock_tools)
+    def test_invoke_runtime_error(self, mock_tools):
+        """Test synchronous invoke raises RuntimeError with helpful message."""
+        with patch("connectchain.tools.mcp.agent.asyncio.run") as mock_asyncio_run:
+            # Simulate the RuntimeError that occurs when asyncio.run() is called from within an event loop
+            mock_asyncio_run.side_effect = RuntimeError("asyncio.run() cannot be called from a running event loop")
+            
+            agent = MCPToolAgent("1", mock_tools)
 
-        with pytest.raises(NotImplementedError):
-            agent.invoke({"query": "test"})
+            with pytest.raises(RuntimeError, match="MCPToolAgent.invoke\\(\\) failed"):
+                agent.invoke({"query": "test"})
