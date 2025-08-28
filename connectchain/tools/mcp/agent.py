@@ -1,3 +1,16 @@
+# Copyright 2023 American Express Travel Related Services Company, Inc.
+#
+# Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
+# in compliance with the License. You may obtain a copy of the License at
+#
+# http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software distributed under the License
+# is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
+# or implied. See the License for the specific language governing permissions and limitations under
+# the License.
+
+
 """MCPToolAgent: LCEL-compatible agent for executing MCP tools based on LLM decisions.
 This module provides the MCPToolAgent class, which integrates with LCEL and executes
 MCP tools as requested by language model outputs. It supports both synchronous and
@@ -27,7 +40,7 @@ class MCPToolAgent(Runnable):  # pylint: disable=redefined-builtin
 
     async def ainvoke(
         self,
-        input_data: Any,
+        input: Any,  # pylint: disable=redefined-builtin
         config: Optional[RunnableConfig] = None,
         **kwargs: Any,
     ) -> dict:
@@ -36,7 +49,7 @@ class MCPToolAgent(Runnable):  # pylint: disable=redefined-builtin
         if hasattr(llm, "bind_tools"):
             llm = llm.bind_tools(list(self.tools.values()))
 
-        response = await llm.ainvoke(input_data, config)
+        response = await llm.ainvoke(input, config)
 
         if not hasattr(response, "tool_calls") or not response.tool_calls:
             return response
@@ -65,13 +78,13 @@ class MCPToolAgent(Runnable):  # pylint: disable=redefined-builtin
 
     def invoke(
         self,
-        input_data: Any,
+        input: Any,  # pylint: disable=redefined-builtin
         config: Optional[RunnableConfig] = None,
         **kwargs: Any,
     ) -> dict:
         """Synchronous wrapper for the asynchronous ainvoke function."""
         try:
-            return asyncio.run(self.ainvoke(input_data, config, **kwargs))
+            return asyncio.run(self.ainvoke(input, config, **kwargs))
         except RuntimeError as e:
             raise RuntimeError(
                 "MCPToolAgent.invoke() failed. If you are running from within an event loop "
