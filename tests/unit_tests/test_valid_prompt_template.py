@@ -49,6 +49,7 @@ class TestValidPromptTemplate(TestCase):
         prompt = ValidPromptTemplate(
             input_variables=["topic"],
             template=prompt_template,
+            output_sanitizer=None,
         )
         output = prompt.format_prompt(topic="BADWORD").text
         self.assertEqual("Tell me something interesting about BADWORD.", output)

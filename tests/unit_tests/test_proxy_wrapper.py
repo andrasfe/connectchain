@@ -14,7 +14,7 @@ import asyncio
 import unittest
 from unittest.mock import Mock, patch
 
-from connectchain.test.setup_utils import get_mock_ctx_manager
+from .setup_utils import get_mock_ctx_manager
 from connectchain.utils.llm_proxy_wrapper import (
     _async_proxy_,
     _llm_async_methods_,

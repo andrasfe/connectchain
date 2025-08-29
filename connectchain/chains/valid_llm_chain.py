@@ -16,7 +16,7 @@ In addition, it has a callback for sanitizing the output
 from typing import Any, Callable, Dict, List, Optional
 
 from langchain.callbacks.base import Callbacks
-from langchain.chains import LLMChain
+from langchain.chains.llm import LLMChain
 
 
 class ValidLLMChain(LLMChain):

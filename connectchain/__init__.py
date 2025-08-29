@@ -33,5 +33,5 @@ APIChain.ainvoke = override  # type: ignore[assignment]
 APIChain.apply = override  # type: ignore[assignment]
 APIChain.batch = override  # type: ignore[assignment]
 APIChain.abatch = override  # type: ignore[assignment]
-APIChain._call = override  # type: ignore[assignment]
-APIChain._acall = override  # type: ignore[assignment]
+APIChain._call = override  # type: ignore[assignment]  # pylint: disable=protected-access
+APIChain._acall = override  # type: ignore[assignment]  # pylint: disable=protected-access

@@ -19,3 +19,8 @@ dist/
 .pylint
 
 connectchain/config/config.yml
+
+.mcp.json
+config.yml
+.vscode/
+uv.lock

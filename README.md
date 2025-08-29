@@ -2,6 +2,7 @@
 An enterprise-grade, Generative AI framework and utilities for AI-enabled applications. `connectchain` is designed to bridge the gap between enterprise needs and what is available in existing frameworks.
 
 Primary objectives include:
+* Support for both direct API access and Enterprise Auth Service (EAS) integration
 * A login utility for API-based LLM services that integrates with Enterprise Auth Service (EAS). Simplified generation of the JWT token, which is then passed to the modeling service provider.
 * Support for configuration-based outbound proxy support at the model level to allow integration with enterprise-level security requirements.
 * A set of tools to provide greater control over generated prompts. This is done by adding hooks to the existing langchain packages.
@@ -25,6 +26,19 @@ uv pip install connectchain
 ## Usage
 
 Connectchain works with a combination of environmental variables and a configuration `.yml` file. Environmental variables are defined in the `config.yml` and their corresponding values set in the `.env` file. The path to the `config.yml` is defined as an variable in the `.env` file. *You MUST create both a `config.yml` and `.env` file to use the module.* The [example config file](./connectchain/config/example.config.yml) can be found at [`./connectchain/config/example.config.yml`](./connectchain/config/example.config.yml). See the [example env file](example.env) for more details. You can copy and rename both files; replacing the required values with your ids and secrets and adding additional supported options as needed.
+
+### Direct API Access
+ConnectChain supports direct API access without requiring EAS authentication. Simply omit the EAS configuration from your `config.yml` and the framework will automatically use direct API access with provider API keys from environment variables (e.g., `OPENAI_API_KEY`).
+
+```yaml
+# config.yml - Direct access example
+models:
+    '1':
+        provider: openai
+        type: chat
+        model_name: o4-mini-2025-04-16
+        # No EAS, api_base, or engine required for direct access   
+ ```
 
 ### `connectchain.lcel`: For the simplest Use Cases
 [LangChain Expression Language (LCEL)](https://python.langchain.com/docs/expression_language/) supports adding a model() method. Now one can execute a chain by following the LCEL syntax with a minor tweak: 
@@ -70,6 +84,13 @@ models:
         host: proxy.foo.com
         port: 8080
     # ... continue the model configuration
+    
+  # Direct access model (bypasses EAS even when EAS is configured)
+  bar:
+    provider: openai
+    type: chat
+    model_name: gpt-4
+    bypass_eas: true  # Forces direct API access
 ```
 
 Add logging or auditing to the chain:
@@ -187,6 +208,10 @@ except OperationNotPermittedException as e:
 
 ```
 
+### `connectchain.tools.mcp`: MCP (Model Context Protocol) Integration
+
+For examples and configuration details, see the [MCP tool README.md](./connectchain/examples/mcp/README.md).
+
 ## Development
 
 This project uses [uv](https://docs.astral.sh/uv/) for fast dependency management and packaging.
@@ -223,23 +248,35 @@ source .venv/bin/activate  # Linux/macOS
 
 ### Running Tests
 
-The project uses [pytest](https://pytest.org/) for testing. All tests are located in `connectchain/test/`.
+The project uses [pytest](https://pytest.org/) for testing. Tests are organized into:
+- **Unit tests**: Located in `tests/unit_tests/`
+- **Integration tests**: Located in `tests/integration_tests/`
 
 ```bash
-# Run all tests
-uv run pytest
+# Run all tests (unit + integration)
+make test
+
+# Run only unit tests
+make test-unit
+
+# Run only integration tests  
+make test-integration
+
+# Run tests with coverage
+make test-cov                    # All tests with coverage
+make test-unit-cov               # Unit tests with coverage
+make test-integration-cov        # Integration tests with coverage
+
+# Run tests directly with pytest
+uv run pytest                    # Run all tests
+uv run pytest tests/unit_tests/  # Run unit tests only
+uv run pytest tests/integration_tests/  # Run integration tests only
 
 # Run tests with verbose output
 uv run pytest -v
 
-# Run tests with coverage report
-uv run pytest --cov=connectchain
-
-# Run tests with coverage and show missing lines
-uv run pytest --cov=connectchain --cov-report=term-missing
-
 # Run specific test file
-uv run pytest connectchain/test/test_model.py
+uv run pytest tests/unit_tests/test_model.py
 
 # Run tests matching a pattern
 uv run pytest -k "test_model"
@@ -281,7 +318,9 @@ The project uses multiple linting tools to maintain code quality. All tools are 
 make check                                  # Run linting + tests
 make lint                                   # Run all linting checks (includes mypy)
 make lint-quick                             # Run linting checks (skip mypy type checking)
-make test                                   # Run all tests
+make test                                   # Run all tests (unit + integration)
+make test-unit                              # Run unit tests only
+make test-integration                       # Run integration tests only
 
 # Individual linting tools
 make lint-black                             # Code formatting check

@@ -18,7 +18,7 @@ from datetime import datetime, timedelta
 from unittest import TestCase
 from unittest.mock import ANY, patch
 
-from connectchain.test.setup_utils import get_mock_config, wrap_model_config
+from .setup_utils import get_mock_config, wrap_model_config
 from connectchain.utils import TokenUtil, UtilException, get_token_from_env
 
 

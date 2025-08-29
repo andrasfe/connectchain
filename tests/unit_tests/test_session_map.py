@@ -12,7 +12,7 @@
 """Unit testing for SessionMap class"""
 import unittest
 
-from connectchain.test.setup_utils import get_mock_config, wrap_model_config
+from .setup_utils import get_mock_config, wrap_model_config
 from connectchain.utils import SessionMap
 
 
